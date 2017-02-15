@@ -13,6 +13,8 @@ import FBSDKCoreKit
 
 class SignInVC: UIViewController {
 
+    @IBOutlet weak var emailTextfield: FancyField!
+    @IBOutlet weak var passwordTextField: FancyField!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -27,11 +29,11 @@ class SignInVC: UIViewController {
         
         facebookLogin.logIn(withReadPermissions: ["email"], from: self) { (result, error) in
             if error != nil {
-                print("JESS: Unable to authenticate with FAcebook - \(error)")
+                print("MAIL: Unable to authenticate with FAcebook - \(error)")
             } else if result?.isCancelled == true {
-                print("JESS: User cancel Facebook authentication")
+                print("MAIL: User cancel Facebook authentication")
             } else {
-                print("JESS: Successfully authenticated with facebook")
+                print("MAIL: Successfully authenticated with facebook")
                 let credential = FIRFacebookAuthProvider.credential(withAccessToken: FBSDKAccessToken.current().tokenString)
                 self.firebaseAuth(credential)
             }
@@ -42,11 +44,31 @@ class SignInVC: UIViewController {
     func firebaseAuth(_ credential:FIRAuthCredential) {
         FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
             if error != nil {
-                print("JESS: Unable to authenticate with Firebase - \(error)")
+                print("MAIL: Unable to authenticate with Firebase - \(error)")
             } else {
-                print("JESS: Successfully authenticate with Firebase")
+                print("MAIL: Successfully authenticate with Firebase")
             }
         })
+    }
+
+    @IBAction func signInBtnPress(_ sender: Any) {
+        
+        if let email = emailTextfield.text, let pwd = passwordTextField.text {
+            FIRAuth.auth()?.signIn(withEmail: email, password: pwd, completion: { (user, error) in
+                if error == nil {
+                    print("MAIL: Email user authenticated with firebase")
+                } else {
+                    FIRAuth.auth()?.createUser(withEmail: email, password: pwd, completion: { (user, error) in
+                        if error != nil {
+                            print("MAIL:Unable to authenticate with Firebase using email")
+                        } else {
+                            print("MAIL:Succesfully authenticated with Firebase")
+                        }
+                    })
+                }
+            })
+        }
+        
     }
 
 }
