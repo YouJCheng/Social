@@ -13,6 +13,7 @@ target 'Social' do
   pod 'FirebaseDatabase'
   pod 'FirebaseStorage'
   pod 'FirebaseCore'
+  pod 'FBSDKLoginKit'
 
   
 
