@@ -10,17 +10,25 @@ import UIKit
 import SwiftKeychainWrapper
 import Firebase
 
-class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var imageAdd: CircleView!
+   
     var posts = [Post]()
-
+    var imagePicker:UIImagePickerController!
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.delegate = self
         tableView.dataSource = self
+        imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = true
+        imagePicker.delegate = self
         
         DataService.ds.REF_POST.observe(.value, with: {(snapshot) in
             if let snapshot = snapshot.children.allObjects as? [FIRDataSnapshot] {
@@ -55,6 +63,15 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             return PostCell()
         }
     }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            imageAdd.image = image
+        } else {
+            print("MAIL: A valid image was not selected")
+        }
+        imagePicker.dismiss(animated: true, completion: nil)
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -67,6 +84,9 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         try! FIRAuth.auth()?.signOut()
         performSegue(withIdentifier: "goToSignIn", sender: nil)
         
+    }
+    @IBAction func addImagePress(_ sender: Any) {
+        present(imagePicker, animated: true, completion: nil)
     }
 
 

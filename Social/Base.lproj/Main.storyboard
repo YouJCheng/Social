@@ -187,13 +187,17 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ooz-T3-mpe">
                                         <rect key="frame" x="8" y="8" width="327" height="49"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add-image" translatesAutoresizingMaskIntoConstraints="NO" id="374-HB-oRq" customClass="CircleView" customModule="Social" customModuleProvider="target">
+                                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add-image" translatesAutoresizingMaskIntoConstraints="NO" id="374-HB-oRq" customClass="CircleView" customModule="Social" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="49" height="49"/>
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <gestureRecognizers/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="49" id="seh-9t-dRU"/>
                                                     <constraint firstAttribute="width" constant="49" id="zVj-rr-vyH"/>
                                                 </constraints>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="kCG-dG-M27" appends="YES" id="LVF-3B-gym"/>
+                                                </connections>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5vA-5C-oxB">
                                                 <rect key="frame" x="59" y="0.0" width="209" height="49"/>
@@ -347,6 +351,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="imageAdd" destination="374-HB-oRq" id="SKY-3O-Yg8"/>
                         <outlet property="tableView" destination="j2t-Uu-DIl" id="RlD-ec-KtG"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="goToSignIn" id="3uk-nb-JJP"/>
                     </connections>
@@ -355,6 +360,11 @@
                 <tapGestureRecognizer id="iht-za-JTm">
                     <connections>
                         <action selector="signOutPress:" destination="hFH-Xn-ahn" id="REg-uP-Oiq"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="kCG-dG-M27">
+                    <connections>
+                        <action selector="addImagePress:" destination="hFH-Xn-ahn" id="rxd-n9-2nM"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
