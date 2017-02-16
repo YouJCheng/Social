@@ -57,7 +57,9 @@ class SignInVC: UIViewController {
             } else {
                 print("MAIL: Successfully authenticate with Firebase")
                 if let user = user {
-                    KeychainWrapper.standard.set(user.uid, forKey: KEY_UID)
+                    let userData = ["provider": credential.provider]
+                    self.completedSignIn(id: user.uid, userData: userData)
+                    //KeychainWrapper.standard.set(user.uid, forKey: KEY_UID)
                 }
             }
         })
@@ -70,7 +72,8 @@ class SignInVC: UIViewController {
                 if error == nil {
                     print("MAIL: Email user authenticated with firebase")
                     if let user = user {
-                        self.completedSignIn(id: user.uid)
+                        let userData = ["provider": user.providerID]
+                        self.completedSignIn(id: user.uid, userData: userData)
                     }
                 } else {
                     FIRAuth.auth()?.createUser(withEmail: email, password: pwd, completion: { (user, error) in
@@ -79,7 +82,9 @@ class SignInVC: UIViewController {
                         } else {
                             print("MAIL:Succesfully authenticated with Firebase")
                             if let user = user {
-                                self.completedSignIn(id: user.uid)
+                                let userData = ["provider": user.providerID]
+                                self.completedSignIn(id: user.uid, userData: userData)
+
                             }
                         }
                     })
@@ -88,7 +93,8 @@ class SignInVC: UIViewController {
         }
         
     }
-    func completedSignIn(id: String) {
+    func completedSignIn(id: String, userData: Dictionary<String, String>) {
+        DataService.ds.createFirebaseDBUser(uid:id, userData:userData)
         let keychainResult = KeychainWrapper.standard.set(id, forKey: KEY_UID)
         print("MAIL: Data saved to keychain\(keychainResult)")
         performSegue(withIdentifier: "goToFeed", sender: nil)
