@@ -14,7 +14,7 @@ target 'Social' do
   pod 'FirebaseStorage'
   pod 'FirebaseCore'
   pod 'FBSDKLoginKit'
-
+  pod 'SwiftKeychainWrapper'
   
 
 
