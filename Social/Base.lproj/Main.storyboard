@@ -199,7 +199,7 @@
                                                     <outletCollection property="gestureRecognizers" destination="kCG-dG-M27" appends="YES" id="LVF-3B-gym"/>
                                                 </connections>
                                             </imageView>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5vA-5C-oxB">
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5vA-5C-oxB" customClass="FancyField" customModule="Social" customModuleProvider="target">
                                                 <rect key="frame" x="59" y="0.0" width="209" height="49"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -213,6 +213,9 @@
                                                     <constraint firstAttribute="width" constant="49" id="R3J-fx-fMb"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="add-post"/>
+                                                <connections>
+                                                    <action selector="postBtnPress:" destination="hFH-Xn-ahn" eventType="touchUpInside" id="7Eh-vW-MtP"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -351,6 +354,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="captionField" destination="5vA-5C-oxB" id="qqS-jY-DDD"/>
                         <outlet property="imageAdd" destination="374-HB-oRq" id="SKY-3O-Yg8"/>
                         <outlet property="tableView" destination="j2t-Uu-DIl" id="RlD-ec-KtG"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="goToSignIn" id="3uk-nb-JJP"/>
