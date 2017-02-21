@@ -18,6 +18,8 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
    
     @IBOutlet weak var captionField: FancyField!
     
+    
+    
     var posts = [Post]()
    
     var imagePicker:UIImagePickerController!
@@ -66,16 +68,17 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
             
             if let img = FeedVC.imageCache.object(forKey: post.imageUrl as NSString) {
                 cell.configureCell(post: post, img: img)
-                return cell
             } else {
                 cell.configureCell(post: post)
-                return cell
             }
+            return cell
         } else {
             return PostCell()
         }
         
     }
+    
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
             imageAdd.image = image
@@ -92,18 +95,18 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func signOutPress(_ sender: Any) {
+    @IBAction func signOutPress(_ sender: AnyObject) {
         let keychainResult = KeychainWrapper.standard.removeObject(forKey: KEY_UID)
         print("MAIL: ID removed from keychain \(keychainResult)")
         try! FIRAuth.auth()?.signOut()
         performSegue(withIdentifier: "goToSignIn", sender: nil)
         
     }
-    @IBAction func addImagePress(_ sender: Any) {
+    @IBAction func addImagePress(_ sender: AnyObject) {
         present(imagePicker, animated: true, completion: nil)
     }
 
-    @IBAction func postBtnPress(_ sender: Any) {
+    @IBAction func postBtnPress(_ sender: AnyObject) {
         guard let caption = captionField.text, caption != "" else {
             print("MAIL: Caption must be enterd")
             return
@@ -124,13 +127,33 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                     print ("MAIL: Unable to upload to Firebase storage")
                 } else {
                     print ("MAIL: Able to upload to Firebase storage")
-                    let downloadURL = metadata?.downloadURL()?.absoluteURL
+                    let downloadURL = metadata?.downloadURL()?.absoluteString
+                    if let url = downloadURL {
+                    self.postToFireBase(imageUrl: url)
+                    }
                 }
             }
             
         }
         
     }
-
+    
+    func postToFireBase(imageUrl: String) {
+        let post: Dictionary<String, AnyObject> = [
+            "caption": captionField.text! as AnyObject ,
+            "imageUrl": imageUrl as AnyObject,
+            "likes": 0 as AnyObject
+        ]
+        
+        let firebasePost = DataService.ds.REF_POST.childByAutoId()
+        firebasePost.setValue(post)
+        
+        captionField.text = ""
+        imageSelected = false
+        imageAdd.image = UIImage(named: "add-image")
+        
+        tableView.reloadData()
+        
+    }
 
 }
