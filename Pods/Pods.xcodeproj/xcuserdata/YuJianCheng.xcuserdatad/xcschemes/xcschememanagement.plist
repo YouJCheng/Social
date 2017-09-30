@@ -29,6 +29,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Hero.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
 		<key>Pods-Social.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -42,7 +47,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>07A191B176086504E68DC7CE4FFE0D9E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>107A9565F9DF88517DFD3E28C05B2B96</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>130C2FE4C827483D35EFAF65322C5A01</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3552090A0B0E535171315630A4533B15</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -58,6 +78,11 @@
 			<true/>
 		</dict>
 		<key>8E643BE703004C072B59495F44B79D3B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B014639DFD988E9AB809CFF189005EE8</key>
 		<dict>
 			<key>primary</key>
 			<true/>

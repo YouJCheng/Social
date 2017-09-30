@@ -12,6 +12,7 @@ import Firebase
 
 class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet weak var memoLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var imageAdd: CircleView!
@@ -62,7 +63,8 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let post = posts[indexPath.row]
+        
+        let post = posts.reversed()[indexPath.row]
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as? PostCell {
             
@@ -77,9 +79,10 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         }
         
     }
-    
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+
+
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
             imageAdd.image = image
             imageSelected = true
@@ -87,13 +90,11 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
             print("MAIL: A valid image was not selected")
         }
         imagePicker.dismiss(animated: true, completion: nil)
+
+
     }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+
+
     
     @IBAction func signOutPress(_ sender: AnyObject) {
         let keychainResult = KeychainWrapper.standard.removeObject(forKey: KEY_UID)
@@ -102,6 +103,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         performSegue(withIdentifier: "goToSignIn", sender: nil)
         
     }
+
     @IBAction func addImagePress(_ sender: AnyObject) {
         present(imagePicker, animated: true, completion: nil)
     }
@@ -142,8 +144,10 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         let post: Dictionary<String, AnyObject> = [
             "caption": captionField.text! as AnyObject ,
             "imageUrl": imageUrl as AnyObject,
-            "likes": 0 as AnyObject
-        ]
+            "likes": 0 as AnyObject,
+            "memo":captionField.text as AnyObject,
+            ]
+
         
         let firebasePost = DataService.ds.REF_POST.childByAutoId()
         firebasePost.setValue(post)

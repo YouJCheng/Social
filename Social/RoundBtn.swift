@@ -18,7 +18,7 @@ class RoundBtn: UIButton {
         layer.shadowRadius = 5.0
         layer.shadowOffset = CGSize(width: 1.0, height: 1.0)
         imageView?.contentMode = .scaleAspectFit
-        //layer.cornerRadius = 5.0
+        layer.cornerRadius = 5.0
     }
     
     override func layoutSubviews() {

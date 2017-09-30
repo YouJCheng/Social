@@ -13,23 +13,34 @@ import FBSDKCoreKit
 import SwiftKeychainWrapper
 
 class SignInVC: UIViewController {
+  
 
     @IBOutlet weak var emailTextfield: FancyField!
     @IBOutlet weak var passwordTextField: FancyField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let grad = CAGradientLayer()
+        grad.colors = [
+            UIColor.red.cgColor, // top color
+            UIColor.magenta.cgColor // bottom color
+        ]
+        grad.locations = [
+            0.0, // start gradating at top of view
+            1.0  // end gradating at bottom of view
+        ]
+
+        grad.frame = view.layer.bounds
+        view.layer.insertSublayer(grad, at: 1)
+        
+
+        emailTextfield.keyboardType = .emailAddress
+
     }
     override func viewDidAppear(_ animated: Bool) {
         if let _ = KeychainWrapper.standard.string(forKey: KEY_UID){
             print("MAIL: ID found in Keychain")
             performSegue(withIdentifier: "goToFeed", sender: nil)
         }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     
@@ -38,7 +49,7 @@ class SignInVC: UIViewController {
         
         facebookLogin.logIn(withReadPermissions: ["email"], from: self) { (result, error) in
             if error != nil {
-                print("MAIL: Unable to authenticate with FAcebook - \(error)")
+                print("MAIL: Unable to authenticate with FAcebook - \(String(describing: error))")
             } else if result?.isCancelled == true {
                 print("MAIL: User cancel Facebook authentication")
             } else {
@@ -53,13 +64,13 @@ class SignInVC: UIViewController {
     func firebaseAuth(_ credential:FIRAuthCredential) {
         FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
             if error != nil {
-                print("MAIL: Unable to authenticate with Firebase - \(error)")
+                print("MAIL: Unable to authenticate with Firebase - \(String(describing: error))")
             } else {
                 print("MAIL: Successfully authenticate with Firebase")
                 if let user = user {
                     let userData = ["provider": credential.provider]
                     self.completedSignIn(id: user.uid, userData: userData)
-                    //KeychainWrapper.standard.set(user.uid, forKey: KEY_UID)
+                    KeychainWrapper.standard.set(user.uid, forKey: KEY_UID)
                 }
             }
         })
@@ -93,6 +104,7 @@ class SignInVC: UIViewController {
         }
         
     }
+
     func completedSignIn(id: String, userData: Dictionary<String, String>) {
         DataService.ds.createFirebaseDBUser(uid:id, userData:userData)
         let keychainResult = KeychainWrapper.standard.set(id, forKey: KEY_UID)
