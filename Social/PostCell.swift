@@ -27,6 +27,7 @@ class PostCell: UITableViewCell {
         let tap = UITapGestureRecognizer(target: self, action: #selector(likeTapped))
         tap.numberOfTapsRequired = 1
         likeImg.addGestureRecognizer(tap)
+        
         likeImg.isUserInteractionEnabled = true
         
     }

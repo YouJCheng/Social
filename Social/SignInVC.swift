@@ -38,7 +38,7 @@ class SignInVC: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         if let _ = KeychainWrapper.standard.string(forKey: KEY_UID){
-            print("MAIL: ID found in Keychain")
+            print("ID found in Keychain")
             performSegue(withIdentifier: "goToFeed", sender: nil)
         }
     }
@@ -49,11 +49,11 @@ class SignInVC: UIViewController {
         
         facebookLogin.logIn(withReadPermissions: ["email"], from: self) { (result, error) in
             if error != nil {
-                print("MAIL: Unable to authenticate with FAcebook - \(String(describing: error))")
+                print("Unable to authenticate with FAcebook - \(String(describing: error))")
             } else if result?.isCancelled == true {
-                print("MAIL: User cancel Facebook authentication")
+                print("User cancel Facebook authentication")
             } else {
-                print("MAIL: Successfully authenticated with facebook")
+                print("Successfully authenticated with facebook")
                 let credential = FIRFacebookAuthProvider.credential(withAccessToken: FBSDKAccessToken.current().tokenString)
                 self.firebaseAuth(credential)
             }
@@ -64,9 +64,9 @@ class SignInVC: UIViewController {
     func firebaseAuth(_ credential:FIRAuthCredential) {
         FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
             if error != nil {
-                print("MAIL: Unable to authenticate with Firebase - \(String(describing: error))")
+                print("Unable to authenticate with Firebase - \(String(describing: error))")
             } else {
-                print("MAIL: Successfully authenticate with Firebase")
+                print("Successfully authenticate with Firebase")
                 if let user = user {
                     let userData = ["provider": credential.provider]
                     self.completedSignIn(id: user.uid, userData: userData)
@@ -81,7 +81,7 @@ class SignInVC: UIViewController {
         if let email = emailTextfield.text, let pwd = passwordTextField.text {
             FIRAuth.auth()?.signIn(withEmail: email, password: pwd, completion: { (user, error) in
                 if error == nil {
-                    print("MAIL: Email user authenticated with firebase")
+                    print("Email user authenticated with firebase")
                     if let user = user {
                         let userData = ["provider": user.providerID]
                         self.completedSignIn(id: user.uid, userData: userData)
@@ -89,9 +89,9 @@ class SignInVC: UIViewController {
                 } else {
                     FIRAuth.auth()?.createUser(withEmail: email, password: pwd, completion: { (user, error) in
                         if error != nil {
-                            print("MAIL:Unable to authenticate with Firebase using email")
+                            print("Unable to authenticate with Firebase using email")
                         } else {
-                            print("MAIL:Succesfully authenticated with Firebase")
+                            print("Succesfully authenticated with Firebase")
                             if let user = user {
                                 let userData = ["provider": user.providerID]
                                 self.completedSignIn(id: user.uid, userData: userData)
@@ -108,10 +108,21 @@ class SignInVC: UIViewController {
     func completedSignIn(id: String, userData: Dictionary<String, String>) {
         DataService.ds.createFirebaseDBUser(uid:id, userData:userData)
         let keychainResult = KeychainWrapper.standard.set(id, forKey: KEY_UID)
-        print("MAIL: Data saved to keychain\(keychainResult)")
+        print("Data saved to keychain\(keychainResult)")
         performSegue(withIdentifier: "goToFeed", sender: nil)
     }
     
     
 }
 
+extension SignInVC {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(SignInVC.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
